@@ -7,6 +7,13 @@ class LoginRegister extends StatefulWidget {
 }
 
 class _LoginRegisterState extends State<LoginRegister> {
+  // Methods
+
+  void ValdiateAndSave() {}
+
+  void MoveToRegister() {}
+
+  // Design
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,14 +72,14 @@ class _LoginRegisterState extends State<LoginRegister> {
   List<Widget> createButtons() {
     return [
       ElevatedButton(
-          onPressed: () {},
+          onPressed: ValdiateAndSave,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
             foregroundColor: Colors.green,
           ),
           child: const Text("Login", style: TextStyle(fontSize: 20.0))),
       TextButton(
-          onPressed: () {},
+          onPressed: MoveToRegister,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
             foregroundColor: Colors.green,
