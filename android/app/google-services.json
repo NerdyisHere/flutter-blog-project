@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "226401897171",
+    "project_id": "blog-app-project-200953",
+    "storage_bucket": "blog-app-project-200953.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226401897171:android:b54975120b4525ff9a6226",
+        "android_client_info": {
+          "package_name": "blogproject2009853.wlv.ac.uk.flutter_blog_project_2009853"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB00M7xA1hyXAEOb9Rkwxhcakv87bJd3B4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
