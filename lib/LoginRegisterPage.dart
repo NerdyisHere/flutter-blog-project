@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'Auth.dart';
 
 class LoginRegister extends StatefulWidget {
+  LoginRegister({required this.auth, required this.onSignedIn});
+
+  final AuthImplementation auth;
+  final VoidCallback onSignedIn;
+
   State<StatefulWidget> createState() {
     return _LoginRegisterState();
   }
@@ -13,7 +19,9 @@ class _LoginRegisterState extends State<LoginRegister> {
 
   FormType _formType = FormType.login;
 
+  // ignore: unused_field
   String _email = "";
+  // ignore: unused_field
   String _password = "";
   // Methods
 
@@ -25,6 +33,23 @@ class _LoginRegisterState extends State<LoginRegister> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  void validateAndSubmit() async {
+    if (validateAndSave()) {
+      try {
+        if (_formType == FormType.login) {
+          String userId = await widget.auth.signIn(_email, _password);
+          print("login userID = " + userId);
+        } else {
+          String userId = await widget.auth.signUp(_email, _password);
+          print("Register userID = " + userId);
+        }
+        widget.onSignedIn();
+      } catch (e) {
+        print("Error = " + e.toString());
+      }
     }
   }
 
@@ -49,12 +74,12 @@ class _LoginRegisterState extends State<LoginRegister> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Digital Front Gaming Blog"),
+        title: Text("Digital Front Gaming Blog"),
         backgroundColor: Colors.green,
         centerTitle: true,
       ),
       body: Container(
-        margin: const EdgeInsets.all(15.0),
+        margin: EdgeInsets.all(15.0),
         child: Form(
           key: formKey,
           child: Column(
@@ -68,15 +93,15 @@ class _LoginRegisterState extends State<LoginRegister> {
 
   List<Widget> createInputs() {
     return [
-      const SizedBox(
+      SizedBox(
         height: 10.0,
       ),
       logo(),
-      const SizedBox(
+      SizedBox(
         height: 20.0,
       ),
       TextFormField(
-        decoration: const InputDecoration(labelText: 'Email'),
+        decoration: InputDecoration(labelText: 'Email'),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter an email';
@@ -87,11 +112,11 @@ class _LoginRegisterState extends State<LoginRegister> {
           _email = value!;
         },
       ),
-      const SizedBox(
+      SizedBox(
         height: 10.0,
       ),
       TextFormField(
-        decoration: const InputDecoration(labelText: 'Password'),
+        decoration: InputDecoration(labelText: 'Password'),
         obscureText: true,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -103,7 +128,7 @@ class _LoginRegisterState extends State<LoginRegister> {
           _password = value!;
         },
       ),
-      const SizedBox(
+      SizedBox(
         height: 20.0,
       ),
     ];
@@ -124,39 +149,37 @@ class _LoginRegisterState extends State<LoginRegister> {
     if (_formType == FormType.login) {
       return [
         ElevatedButton(
-            onPressed: validateAndSave,
+            onPressed: validateAndSubmit,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.green,
             ),
-            child: const Text("Login", style: TextStyle(fontSize: 20.0))),
+            child: Text("Login", style: TextStyle(fontSize: 20.0))),
         TextButton(
             onPressed: moveToRegister,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.green,
             ),
-            child: const Text(
-                "You don't have a blog account? Create an account!",
+            child: Text("You don't have a blog account? Create an account!",
                 style: TextStyle(fontSize: 15.0))),
       ];
     } else {
       return [
         ElevatedButton(
-            onPressed: validateAndSave,
+            onPressed: validateAndSubmit,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.green,
             ),
-            child:
-                const Text("Create Account", style: TextStyle(fontSize: 20.0))),
+            child: Text("Create Account", style: TextStyle(fontSize: 20.0))),
         TextButton(
             onPressed: moveToLogin,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.green,
             ),
-            child: const Text("Already have an account? Login now!",
+            child: Text("Already have an account? Login now!",
                 style: TextStyle(fontSize: 15.0))),
       ];
     }

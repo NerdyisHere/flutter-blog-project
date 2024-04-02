@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blog_project_2009853/Auth.dart';
+import 'Auth.dart';
 
 class Home extends StatefulWidget {
+  Home({
+    required this.auth,
+    required this.onSignedOut,
+  });
+
+  final AuthImplementation auth;
+  final VoidCallback onSignedOut;
+
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -8,11 +18,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  void _logoutUser() async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } catch (e) {
+      print("Error = " + e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Digital Front Home Page"),
+        title: const Text("Digital Front Home"),
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
@@ -20,7 +39,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,
         child: Container(
-            child: const Row(
+            child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
@@ -28,7 +47,7 @@ class _HomeState extends State<Home> {
                   color: Colors.green,
                   iconSize: 50,
                   icon: Icon(Icons.local_car_wash_outlined),
-                  onPressed: null),
+                  onPressed: _logoutUser),
               IconButton(
                   color: Colors.green,
                   iconSize: 50,
