@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_project_2009853/Auth.dart';
 import 'Auth.dart';
+import 'BlogPhotoUpload.dart';
 
 class Home extends StatefulWidget {
   Home({
@@ -52,7 +53,12 @@ class _HomeState extends State<Home> {
                   color: Colors.green,
                   iconSize: 50,
                   icon: Icon(Icons.add_a_photo_outlined),
-                  onPressed: null),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return BlogPhotoUpload();
+                    }));
+                  }),
             ])),
       ),
     );
