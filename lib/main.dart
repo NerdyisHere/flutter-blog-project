@@ -8,6 +8,7 @@ import 'LoginRegisterPage.dart';
 import 'Mapping.dart';
 import 'Auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

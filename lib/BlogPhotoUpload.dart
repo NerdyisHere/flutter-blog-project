@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'Auth.dart';
+import 'Home.dart';
+import 'Mapping.dart';
 
 class BlogPhotoUpload extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -13,7 +16,9 @@ class BlogPhotoUpload extends StatefulWidget {
 
 class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
   File? blogSampleImage;
-  String? _BlogValue;
+  String? _blogValue;
+
+  String? url;
   final formKey = new GlobalKey<FormState>();
   Future getBlogImage() async {
     var blogTempImage =
@@ -35,6 +40,69 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     } else {
       return false;
     }
+  }
+
+  void uploadBlogStatusImage() async {
+    if (validateAndSave()) {
+      final Reference imageReference =
+          FirebaseStorage.instance.ref().child("Post Blog Images");
+
+      var blogTimeKey = DateTime.now();
+
+      try {
+        final UploadTask blogUploadTask = imageReference
+            .child(blogTimeKey.toString() + ".jpg")
+            .putFile(blogSampleImage!);
+
+        var blogImageURL = await (await blogUploadTask).ref.getDownloadURL();
+
+        if (blogImageURL != null) {
+          url = blogImageURL.toString();
+          print("Blog Image =" + url!);
+
+          goToBlogHomePage();
+
+          saveToBlogDatabase(url!); // Ensure url is not null before passing it
+        } else {
+          // Handle case where blogImageURL is null
+          print("Failed to get blog image URL");
+        }
+      } catch (e) {
+        // Handle any exceptions that occur during the upload process
+        print("Error uploading image: $e");
+      }
+    }
+  }
+
+  void saveToBlogDatabase(String url) {
+    try {
+      var dbBlogTimeKey = DateTime.now();
+      var blogFormatDate = DateFormat('MMM d, yyyy');
+      var blogFormatTime = DateFormat('EEEE, hh:mm aaa');
+
+      String date = blogFormatDate.format(dbBlogTimeKey);
+      String time = blogFormatTime.format(dbBlogTimeKey);
+
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+      var data = {
+        "image": url,
+        "description": _blogValue,
+        "date": date,
+        "time": time,
+      };
+
+      ref.child("Blog Posts").push().set(data);
+    } catch (e) {
+      // Handle any exceptions that occur during the database operation
+      print("Error saving to database: $e");
+    }
+  }
+
+  void goToBlogHomePage() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return Home(); // Return an instance of the Home widget
+    }));
   }
 
   @override
@@ -83,14 +151,14 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
                   : null;
             },
             onSaved: (value) {
-              _BlogValue = value!;
+              _blogValue = value!;
             },
           ),
           SizedBox(
             height: 20.0,
           ),
           ElevatedButton(
-              onPressed: validateAndSave,
+              onPressed: uploadBlogStatusImage,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.green,

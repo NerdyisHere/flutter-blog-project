@@ -5,12 +5,12 @@ import 'BlogPhotoUpload.dart';
 
 class Home extends StatefulWidget {
   Home({
-    required this.auth,
-    required this.onSignedOut,
+    this.auth,
+    this.onSignedOut,
   });
 
-  final AuthImplementation auth;
-  final VoidCallback onSignedOut;
+  final AuthImplementation? auth;
+  final VoidCallback? onSignedOut;
 
   @override
   State<StatefulWidget> createState() {
@@ -21,8 +21,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   void _logoutUser() async {
     try {
-      await widget.auth.signOut();
-      widget.onSignedOut();
+      await widget.auth!.signOut();
+      widget.onSignedOut!();
     } catch (e) {
       print("Error = " + e.toString());
     }
@@ -45,12 +45,12 @@ class _HomeState extends State<Home> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
               IconButton(
-                  color: Colors.green,
+                  color: Colors.white,
                   iconSize: 50,
                   icon: Icon(Icons.local_car_wash_outlined),
                   onPressed: _logoutUser),
               IconButton(
-                  color: Colors.green,
+                  color: Colors.white,
                   iconSize: 50,
                   icon: Icon(Icons.add_a_photo_outlined),
                   onPressed: () {

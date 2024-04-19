@@ -3,10 +3,10 @@ import 'Auth.dart';
 import 'DialogBox.dart';
 
 class LoginRegister extends StatefulWidget {
-  LoginRegister({required this.auth, required this.onSignedIn});
+  LoginRegister({this.auth, this.onSignedIn});
 
-  final AuthImplementation auth;
-  final VoidCallback onSignedIn;
+  final AuthImplementation? auth;
+  final VoidCallback? onSignedIn;
 
   State<StatefulWidget> createState() {
     return _LoginRegisterState();
@@ -42,17 +42,17 @@ class _LoginRegisterState extends State<LoginRegister> {
     if (validateAndSave()) {
       try {
         if (_formType == FormType.login) {
-          String userId = await widget.auth.signIn(_email, _password);
+          String userId = await widget.auth!.signIn(_email, _password);
           dialog.information(
               context, "Nice = ", "You have signed into your blog account");
           print("login userID = " + userId);
         } else {
-          String userId = await widget.auth.signUp(_email, _password);
+          String userId = await widget.auth!.signUp(_email, _password);
           dialog.information(
               context, "Congrats = ", "Your blog account has been created.");
           print("Register userID = " + userId);
         }
-        widget.onSignedIn();
+        widget.onSignedIn!();
       } catch (e) {
         dialog.information(context, "Error = ", e.toString());
         print("Error = " + e.toString());
