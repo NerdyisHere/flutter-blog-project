@@ -1,7 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blog_project_2009853/Auth.dart';
 import 'Auth.dart';
 import 'BlogPhotoUpload.dart';
+import 'BlogPosts.dart';
 
 class Home extends StatefulWidget {
   Home({
@@ -19,6 +23,38 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<BlogPosts> blogPostList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    DatabaseReference postsBlogRef =
+        FirebaseDatabase.instance.ref().child("Blog Posts");
+
+    postsBlogRef.once().then((DatabaseEvent snap) {
+      DataSnapshot dataSnapshot = snap.snapshot;
+      var KEYS = (dataSnapshot.value as Map?)?.keys.toList();
+      var DATA = dataSnapshot.value as Map?;
+
+      blogPostList.clear();
+
+      for (var individualBlogKey in KEYS!) {
+        BlogPosts posts = BlogPosts(
+          DATA?[individualBlogKey]['image'],
+          DATA?[individualBlogKey]['description'],
+          DATA?[individualBlogKey]['date'],
+          DATA?[individualBlogKey]['time'],
+        );
+        blogPostList.add(posts);
+      }
+      setState(() {
+        print('Length: $blogPostList.length');
+      });
+    });
+  }
+
   void _logoutUser() async {
     try {
       await widget.auth!.signOut();
@@ -36,7 +72,19 @@ class _HomeState extends State<Home> {
         centerTitle: true,
         backgroundColor: Colors.green,
       ),
-      body: Container(),
+      body: Container(
+          child: blogPostList.length == 0
+              ? Text("No Blog Post avaliable")
+              : ListView.builder(
+                  itemCount: blogPostList.length,
+                  itemBuilder: (_, index) {
+                    return BlogPostsUI(
+                      blogPostList[index].image,
+                      blogPostList[index].description,
+                      blogPostList[index].date,
+                      blogPostList[index].time,
+                    );
+                  })),
       bottomNavigationBar: BottomAppBar(
         color: Colors.green,
         child: Container(
@@ -60,6 +108,50 @@ class _HomeState extends State<Home> {
                     }));
                   }),
             ])),
+      ),
+    );
+  }
+
+  Widget BlogPostsUI(
+    String? image,
+    String? description,
+    String? date,
+    String? time,
+  ) {
+    return Card(
+      elevation: 10.0,
+      margin: EdgeInsets.all(15.0),
+      child: Container(
+        padding: EdgeInsets.all(14.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  date!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  time!,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Image.network(image!, fit: BoxFit.cover),
+            Text(
+              description!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
       ),
     );
   }
