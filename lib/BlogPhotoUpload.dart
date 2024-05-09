@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'Auth.dart';
 import 'Home.dart';
 import 'Mapping.dart';
+import 'package:share_plus/share_plus.dart';
 
 class BlogPhotoUpload extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -16,7 +17,7 @@ class BlogPhotoUpload extends StatefulWidget {
 
 class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
   File? blogSampleImage;
-  String? _blogValue;
+  String? _blogValue = '';
 
   String? url;
   final formKey = new GlobalKey<FormState>();
@@ -150,8 +151,8 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
                   ? 'A blog description is required to continue'
                   : null;
             },
-            onSaved: (value) {
-              _blogValue = value!;
+            onChanged: (value) {
+              _blogValue = value;
             },
           ),
           SizedBox(
@@ -168,6 +169,17 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
                     fontSize: 20.0,
                     color: Colors.green,
                   ))),
+          ElevatedButton(
+            onPressed: () async {
+              if (_blogValue != null) {
+                await Share.share(_blogValue!, subject: 'New Blog Post');
+              } else {
+                // Handle the case where _blogValue is null
+                print('_blogValue is null');
+              }
+            },
+            child: Icon(Icons.share),
+          ),
         ],
       ),
     ));
