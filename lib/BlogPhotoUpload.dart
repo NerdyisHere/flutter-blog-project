@@ -1,3 +1,4 @@
+// Import necessary packages
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +10,21 @@ import 'Home.dart';
 import 'Mapping.dart';
 import 'package:share_plus/share_plus.dart';
 
+// Define a StatefulWidget for uploading a blog photo
 class BlogPhotoUpload extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _BlogPhotoUploadState();
   }
 }
 
+// Define the state for the BlogPhotoUpload widget
 class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
   File? blogSampleImage;
   String? _blogValue = '';
 
   String? url;
   final formKey = new GlobalKey<FormState>();
+  // Function to get a blog image from the device's gallery
   Future getBlogImage() async {
     var blogTempImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -32,6 +36,7 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     });
   }
 
+// Function to validate and save the form
   bool validateAndSave() {
     final form = formKey.currentState;
 
@@ -43,6 +48,7 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     }
   }
 
+// Function to upload the blog status image to Firebase Storage
   void uploadBlogStatusImage() async {
     if (validateAndSave()) {
       final Reference imageReference =
@@ -75,6 +81,7 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     }
   }
 
+  // Function to save the blog data to Firebase Database
   void saveToBlogDatabase(String url) {
     try {
       var dbBlogTimeKey = DateTime.now();
@@ -100,6 +107,7 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     }
   }
 
+  // Function to navigate to the blog home page
   void goToBlogHomePage() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return Home(); // Return an instance of the Home widget
@@ -130,6 +138,7 @@ class _BlogPhotoUploadState extends State<BlogPhotoUpload> {
     );
   }
 
+  // Widget to enable the upload of blog content
   Widget enableUpload() {
     return Container(
         child: Form(

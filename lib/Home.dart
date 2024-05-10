@@ -95,7 +95,7 @@ class _HomeState extends State<Home> {
               IconButton(
                   color: Colors.white,
                   iconSize: 50,
-                  icon: Icon(Icons.local_car_wash_outlined),
+                  icon: Icon(Icons.logout),
                   onPressed: _logoutUser),
               IconButton(
                   color: Colors.white,

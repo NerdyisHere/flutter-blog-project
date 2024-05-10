@@ -1,31 +1,40 @@
 import 'package:flutter/material.dart';
 import 'Auth.dart';
 import 'DialogBox.dart';
+// This is the main widget for the login and registration screen
 
 class LoginRegister extends StatefulWidget {
   LoginRegister({this.auth, this.onSignedIn});
 
-  final AuthImplementation? auth;
-  final VoidCallback? onSignedIn;
+  final AuthImplementation?
+      auth; // Reference to the authentication implementation
+
+  final VoidCallback?
+      onSignedIn; // Callback function to be called after successful login/registration
 
   State<StatefulWidget> createState() {
     return _LoginRegisterState();
   }
 }
 
-enum FormType { login, register }
+enum FormType {
+  login,
+  register
+} // Enum to represent the form type (login or register)
 
 class _LoginRegisterState extends State<LoginRegister> {
-  DialogBox dialog = DialogBox();
-  final formKey = new GlobalKey<FormState>();
+  DialogBox dialog =
+      DialogBox(); // Instance of the DialogBox widget for displaying messages
+  final formKey = new GlobalKey<FormState>(); // Global key for the form
 
-  FormType _formType = FormType.login;
+  FormType _formType = FormType.login; // Initial form type is set to login
 
   // ignore: unused_field
-  String _email = "";
+  String _email = ""; // Variable to store the email input
   // ignore: unused_field
-  String _password = "";
-  // Methods
+  String _password = ""; // Variable to store the password input
+
+  // Validates the form fields and saves the input values
 
   bool validateAndSave() {
     final form = formKey.currentState;
@@ -37,6 +46,8 @@ class _LoginRegisterState extends State<LoginRegister> {
       return false;
     }
   }
+
+  // Validates the form and performs login or registration based on the form type
 
   void validateAndSubmit() async {
     if (validateAndSave()) {
@@ -60,6 +71,8 @@ class _LoginRegisterState extends State<LoginRegister> {
     }
   }
 
+  // Changes the form type to register
+
   void moveToRegister() {
     formKey.currentState?.reset();
 
@@ -67,6 +80,7 @@ class _LoginRegisterState extends State<LoginRegister> {
       _formType = FormType.register;
     });
   }
+  // Changes the form type to login
 
   void moveToLogin() {
     formKey.currentState?.reset();
@@ -76,7 +90,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     });
   }
 
-  // Design
+  // Build method to render the UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +112,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     );
   }
 
+  // Creates the input fields (email and password)
   List<Widget> createInputs() {
     return [
       SizedBox(
@@ -141,6 +156,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     ];
   }
 
+  // Renders the logo
   Widget logo() {
     return Hero(
       tag: 'hero',
@@ -152,6 +168,7 @@ class _LoginRegisterState extends State<LoginRegister> {
     );
   }
 
+  // Creates the buttons (login/register and form type toggle)
   List<Widget> createButtons() {
     if (_formType == FormType.login) {
       return [
